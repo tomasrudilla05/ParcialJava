@@ -9,6 +9,7 @@ import com.excusas.excusas.inverosimiles.*;
 import com.excusas.empleados.encargados.*;
 import com.excusas.empleados.encargados.estrategias.*;
 import com.excusas.prontuario.AdministradorProntuarios;
+import com.excusas.interfaces.IExcusa;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,9 +33,7 @@ class MainTest {
 
     @Test
     void testEmpleadoGeneraExcusaTrivial() {
-
-        Excusa excusa = empleado.generarExcusa("me quedé dormido");
-
+        IExcusa excusa = empleado.generarExcusa("me quedé dormido");
 
         assertNotNull(excusa);
         assertTrue(excusa.getMotivo() instanceof ExcusaTrivial);
@@ -43,7 +42,7 @@ class MainTest {
 
     @Test
     void testEmpleadoGeneraSeCortoLuz() {
-        Excusa excusa = empleado.generarExcusa("se cortó la luz");
+        IExcusa excusa = empleado.generarExcusa("se cortó la luz");
 
         assertNotNull(excusa);
         assertTrue(excusa.getMotivo() instanceof SeCortoLuz);
@@ -53,7 +52,7 @@ class MainTest {
 
     @Test
     void testEmpleadoGeneraTuveCuidarFamiliar() {
-        Excusa excusa = empleado.generarExcusa("tuve que cuidar a mi familiar");
+        IExcusa excusa = empleado.generarExcusa("tuve que cuidar a mi familiar");
 
         assertNotNull(excusa);
         assertTrue(excusa.getMotivo() instanceof TuveCuidarFamiliar);
@@ -63,7 +62,7 @@ class MainTest {
 
     @Test
     void testEmpleadoGeneraExcusaModeradaGenerica() {
-        Excusa excusa = empleado.generarExcusa("problema de transporte");
+        IExcusa excusa = empleado.generarExcusa("problema de transporte");
 
         assertNotNull(excusa);
         assertTrue(excusa.getMotivo() instanceof ExcusaInverosimil);
@@ -71,7 +70,7 @@ class MainTest {
 
     @Test
     void testEmpleadoGeneraExcusaCompleja() {
-        Excusa excusa = empleado.generarExcusa("fui abducido por aliens");
+        IExcusa excusa = empleado.generarExcusa("fui abducido por aliens");
 
         assertNotNull(excusa);
         assertTrue(excusa.getMotivo() instanceof ExcusaCompleja);
@@ -79,7 +78,7 @@ class MainTest {
 
     @Test
     void testEmpleadoGeneraExcusaInverosimil() {
-        Excusa excusa = empleado.generarExcusa("algo increíble");
+        IExcusa excusa = empleado.generarExcusa("algo increíble");
 
         assertNotNull(excusa);
         assertTrue(excusa.getMotivo() instanceof ExcusaInverosimil);
@@ -87,15 +86,16 @@ class MainTest {
 
     @Test
     void testSistemaProcesaExcusa() {
-        Excusa excusa = empleado.generarExcusa("me quedé dormido");
+        IExcusa excusa = empleado.generarExcusa("me quedé dormido");
 
         assertDoesNotThrow(() -> {
-            LineaEncargados.getInstance().procesarExcusa(excusa);
+            LineaEncargados.getInstance().procesarExcusa((Excusa) excusa);
         });
     }
 
     @Test
     void testDoubleDispatchSinInstanceof() {
+
         ExcusaTrivial trivial = new ExcusaTrivial("dormido");
         SeCortoLuz cortoLuz = new SeCortoLuz();
         TuveCuidarFamiliar cuidarFamiliar = new TuveCuidarFamiliar();
@@ -125,6 +125,7 @@ class MainTest {
 
     @Test
     void testComportamientoEspecificoSeCortoLuz() {
+
         Empleado empleado = new Empleado("Test", "test@test.com", 123);
         Excusa excusa = new Excusa(empleado, new SeCortoLuz());
         SupervisorArea supervisor = new SupervisorArea("Supervisor", "super@test.com", 456);
@@ -136,7 +137,6 @@ class MainTest {
 
     @Test
     void testComportamientoEspecificoTuveCuidarFamiliar() {
-
         Empleado empleado = new Empleado("Test", "test@test.com", 123);
         Excusa excusa = new Excusa(empleado, new TuveCuidarFamiliar());
         SupervisorArea supervisor = new SupervisorArea("Supervisor", "super@test.com", 456);
@@ -151,9 +151,9 @@ class MainTest {
         AdministradorProntuarios admin = AdministradorProntuarios.getInstance();
         admin.agregarCEO("ceo1@excusas-sa.com");
 
-        Excusa excusa = empleado.generarExcusa("algo increíble");
+        IExcusa excusa = empleado.generarExcusa("algo increíble");
 
-        LineaEncargados.getInstance().procesarExcusa(excusa);
+        LineaEncargados.getInstance().procesarExcusa((Excusa) excusa);
 
         assertEquals(1, admin.getProntuarios().size());
     }
@@ -161,10 +161,10 @@ class MainTest {
     @Test
     void testTemplateMethodEnEncargadoEmpleado() {
         Recepcionista recepcionista = new Recepcionista("Ana", "ana@test.com", 1001);
-        Excusa excusa = empleado.generarExcusa("me quedé dormido");
+        IExcusa excusa = empleado.generarExcusa("me quedé dormido");
 
         assertDoesNotThrow(() -> {
-            recepcionista.manejarExcusa(excusa);
+            recepcionista.manejarExcusa((Excusa) excusa);
         });
     }
 
@@ -174,16 +174,15 @@ class MainTest {
 
         assertTrue(linea.estaConfigurada());
 
-        Excusa excusa = empleado.generarExcusa("me quedé dormido");
+        IExcusa excusa = empleado.generarExcusa("me quedé dormido");
 
         assertDoesNotThrow(() -> {
-            linea.procesarExcusa(excusa);
+            linea.procesarExcusa((Excusa) excusa);
         });
     }
 
     @Test
     void testEstrategiaVago() {
-
         LineaEncargados.resetearInstancia();
         LineaEncargados linea = LineaEncargados.getInstance();
         linea.configurarLineaEstandar();
@@ -195,10 +194,10 @@ class MainTest {
 
         linea.configurar(recepcionista);
 
-        Excusa excusa = empleado.generarExcusa("me quedé dormido");
+        IExcusa excusa = empleado.generarExcusa("me quedé dormido");
 
         assertDoesNotThrow(() -> {
-            linea.procesarExcusa(excusa);
+            linea.procesarExcusa((Excusa) excusa);
         });
     }
 
@@ -212,10 +211,10 @@ class MainTest {
 
         linea.configurar(recepcionista);
 
-        Excusa excusa = empleado.generarExcusa("me quedé dormido");
+        IExcusa excusa = empleado.generarExcusa("me quedé dormido");
 
         assertDoesNotThrow(() -> {
-            linea.procesarExcusa(excusa);
+            linea.procesarExcusa((Excusa) excusa);
         });
     }
 
@@ -234,6 +233,18 @@ class MainTest {
         assertNotSame(recep1.getEmailSender(), recep2.getEmailSender());
     }
 
+    @Test
+    void testInterfacesImplementadas() {
+        IExcusa excusa = empleado.generarExcusa("test");
+
+        assertNotNull(excusa.getEmpleado());
+        assertNotNull(excusa.getMotivo());
+
+        assertEquals("Juan Pérez", empleado.getNombre());
+        assertEquals("juan@empresa.com", empleado.getEmail());
+        assertEquals(2001, empleado.getNumeroLegajo());
+    }
+
 
     @Test
     @DisplayName("Demostración completa del sistema con clases específicas")
@@ -245,23 +256,22 @@ class MainTest {
 
         System.out.println("\n=== DEMOSTRACIÓN COMPLETA DEL SISTEMA ===\n");
 
-        Excusa excusa1 = empleado1.generarExcusa("me quedé dormido");
-        LineaEncargados.getInstance().procesarExcusa(excusa1);
+        IExcusa excusa1 = empleado1.generarExcusa("me quedé dormido");
+        LineaEncargados.getInstance().procesarExcusa((Excusa) excusa1);
 
-        Excusa excusa2 = empleado2.generarExcusa("se cortó la luz en mi barrio");
-        LineaEncargados.getInstance().procesarExcusa(excusa2);
+        IExcusa excusa2 = empleado2.generarExcusa("se cortó la luz en mi barrio");
+        LineaEncargados.getInstance().procesarExcusa((Excusa) excusa2);
 
-        Excusa excusa3 = empleado3.generarExcusa("tuve que cuidar a mi familiar");
-        LineaEncargados.getInstance().procesarExcusa(excusa3);
+        IExcusa excusa3 = empleado3.generarExcusa("tuve que cuidar a mi familiar");
+        LineaEncargados.getInstance().procesarExcusa((Excusa) excusa3);
 
-        Excusa excusa4 = empleado4.generarExcusa("fui abducido por aliens");
-        LineaEncargados.getInstance().procesarExcusa(excusa4);
+        IExcusa excusa4 = empleado4.generarExcusa("fui abducido por aliens");
+        LineaEncargados.getInstance().procesarExcusa((Excusa) excusa4);
 
-        Excusa excusa5 = empleado1.generarExcusa("algo completamente increíble");
-        LineaEncargados.getInstance().procesarExcusa(excusa5);
+        IExcusa excusa5 = empleado1.generarExcusa("algo completamente increíble");
+        LineaEncargados.getInstance().procesarExcusa((Excusa) excusa5);
 
         System.out.println("\n=== FIN DE LA DEMOSTRACIÓN ===");
-
 
         assertTrue(true);
     }

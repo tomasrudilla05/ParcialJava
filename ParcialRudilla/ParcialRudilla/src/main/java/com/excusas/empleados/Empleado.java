@@ -6,9 +6,11 @@ import com.excusas.excusas.moderadas.*;
 import com.excusas.excusas.complejas.*;
 import com.excusas.excusas.inverosimiles.*;
 import com.excusas.empleados.encargados.LineaEncargados;
+import com.excusas.interfaces.IEmpleado;
+import com.excusas.interfaces.IExcusa;
 
 
-public class Empleado {
+public class Empleado implements IEmpleado {
     private String nombre;
     private String email;
     private int numeroLegajo;
@@ -20,13 +22,15 @@ public class Empleado {
     }
 
 
-    public Excusa generarExcusa(String motivo) {
+    @Override
+    public IExcusa generarExcusa(String motivo) {
         return new Excusa(this, determinarTipoMotivo(motivo));
     }
 
 
-    public void enviarExcusa(Excusa excusa) {
-        LineaEncargados.getInstance().procesarExcusa(excusa);
+    @Override
+    public void enviarExcusa(IExcusa excusa) {
+        LineaEncargados.getInstance().procesarExcusa((Excusa) excusa);
     }
 
 
@@ -51,7 +55,18 @@ public class Empleado {
         }
     }
 
-    public String getNombre() { return nombre; }
-    public String getEmail() { return email; }
-    public int getNumeroLegajo() { return numeroLegajo; }
+    @Override
+    public String getNombre() {
+        return nombre;
+    }
+
+    @Override
+    public String getEmail() {
+        return email;
+    }
+
+    @Override
+    public int getNumeroLegajo() {
+        return numeroLegajo;
+    }
 }

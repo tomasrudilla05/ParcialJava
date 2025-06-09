@@ -6,9 +6,10 @@ import com.excusas.mail.EmailSender;
 import com.excusas.mail.EmailSenderImpl;
 import com.excusas.empleados.encargados.estrategias.EstrategiaManejo;
 import com.excusas.empleados.encargados.estrategias.EstrategiaNormal;
+import com.excusas.interfaces.IEncargadoEmpleado;
+import com.excusas.interfaces.IExcusa;
 
-
-public abstract class EncargadoEmpleado extends Encargado {
+public abstract class EncargadoEmpleado extends Encargado implements IEncargadoEmpleado {
     protected Empleado empleado;
     protected EmailSender emailSender;
     protected EstrategiaManejo estrategia;
@@ -25,20 +26,34 @@ public abstract class EncargadoEmpleado extends Encargado {
         return empleado.getEmail();
     }
 
+    @Override
     public String getNombre() {
         return empleado.getNombre();
     }
 
+    @Override
     public int getNumeroLegajo() {
         return empleado.getNumeroLegajo();
     }
 
+    @Override
     public EmailSender getEmailSender() {
         return emailSender;
     }
 
+    @Override
     public void setEstrategia(EstrategiaManejo estrategia) {
         this.estrategia = estrategia;
+    }
+
+    @Override
+    public IExcusa generarExcusa(String motivo) {
+        return empleado.generarExcusa(motivo);
+    }
+
+    @Override
+    public void enviarExcusa(IExcusa excusa) {
+        empleado.enviarExcusa(excusa);
     }
 
 
