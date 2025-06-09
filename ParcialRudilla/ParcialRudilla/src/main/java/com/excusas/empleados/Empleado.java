@@ -33,25 +33,23 @@ public class Empleado {
     private MotivoExcusa determinarTipoMotivo(String descripcion) {
         descripcion = descripcion.toLowerCase();
 
-
         if (descripcion.contains("luz")) {
             return new SeCortoLuz();
         }
         else if (descripcion.contains("familiar")) {
             return new TuveCuidarFamiliar();
         }
-
         else if (descripcion.contains("dormido") || descripcion.contains("colectivo")) {
             return new ExcusaTrivial(descripcion);
         }
-        else if (descripcion.contains("aliens") || descripcion.contains("paloma") || descripcion.contains("bicicleta")) {
+        else if (descripcion.contains("aliens") || descripcion.contains("paloma") ||
+                descripcion.contains("bicicleta")) {
             return new ExcusaCompleja(descripcion);
         }
         else {
             return new ExcusaInverosimil(descripcion);
         }
     }
-
 
     public String getNombre() { return nombre; }
     public String getEmail() { return email; }

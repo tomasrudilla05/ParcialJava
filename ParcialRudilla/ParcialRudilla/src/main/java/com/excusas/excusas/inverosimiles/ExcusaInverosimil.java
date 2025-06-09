@@ -2,10 +2,7 @@ package com.excusas.excusas.inverosimiles;
 
 import com.excusas.excusas.MotivoExcusa;
 import com.excusas.excusas.Excusa;
-import com.excusas.empleados.encargados.Recepcionista;
-import com.excusas.empleados.encargados.SupervisorArea;
-import com.excusas.empleados.encargados.GerenteRRHH;
-import com.excusas.empleados.encargados.CEO;
+import com.excusas.empleados.encargados.*;
 import com.excusas.prontuario.AdministradorProntuarios;
 import com.excusas.prontuario.Prontuario;
 
@@ -33,7 +30,7 @@ public class ExcusaInverosimil extends MotivoExcusa {
 
     @Override
     public boolean puedeSerManejadaPor(CEO ceo) {
-        return true;
+        return true; // Solo CEO puede manejar inverosímiles
     }
 
     @Override
@@ -53,8 +50,6 @@ public class ExcusaInverosimil extends MotivoExcusa {
 
     @Override
     public void serProcesadaPor(CEO ceo, Excusa excusa) {
-
-
         System.out.println("=== PROCESANDO EXCUSA INVEROSÍMIL ===");
         System.out.println("Empleado: " + excusa.getEmpleado().getNombre());
         System.out.println("Motivo: " + this.getDescripcion());

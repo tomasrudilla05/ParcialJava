@@ -26,10 +26,13 @@ class MainTest {
 
         AdministradorProntuarios.resetearInstancia();
         LineaEncargados.resetearInstancia();
+
+        LineaEncargados.getInstance().configurarLineaEstandar();
     }
 
     @Test
     void testEmpleadoGeneraExcusaTrivial() {
+
         Excusa excusa = empleado.generarExcusa("me quedé dormido");
 
 
@@ -39,21 +42,31 @@ class MainTest {
     }
 
     @Test
-    void testEmpleadoGeneraExcusaModeradaCorte() {
+    void testEmpleadoGeneraSeCortoLuz() {
         Excusa excusa = empleado.generarExcusa("se cortó la luz");
 
         assertNotNull(excusa);
         assertTrue(excusa.getMotivo() instanceof SeCortoLuz);
         assertTrue(excusa.getMotivo() instanceof ExcusaModerada);
+        assertEquals("se cortó la luz en todo el barrio", excusa.getMotivo().getDescripcion());
     }
 
     @Test
-    void testEmpleadoGeneraExcusaModeradaFamiliar() {
+    void testEmpleadoGeneraTuveCuidarFamiliar() {
         Excusa excusa = empleado.generarExcusa("tuve que cuidar a mi familiar");
 
         assertNotNull(excusa);
         assertTrue(excusa.getMotivo() instanceof TuveCuidarFamiliar);
         assertTrue(excusa.getMotivo() instanceof ExcusaModerada);
+        assertEquals("tuve que cuidar a un familiar", excusa.getMotivo().getDescripcion());
+    }
+
+    @Test
+    void testEmpleadoGeneraExcusaModeradaGenerica() {
+        Excusa excusa = empleado.generarExcusa("problema de transporte");
+
+        assertNotNull(excusa);
+        assertTrue(excusa.getMotivo() instanceof ExcusaInverosimil);
     }
 
     @Test
@@ -84,7 +97,8 @@ class MainTest {
     @Test
     void testDoubleDispatchSinInstanceof() {
         ExcusaTrivial trivial = new ExcusaTrivial("dormido");
-        ExcusaModerada moderada = new ExcusaModerada("problema moderado");
+        SeCortoLuz cortoLuz = new SeCortoLuz();
+        TuveCuidarFamiliar cuidarFamiliar = new TuveCuidarFamiliar();
         ExcusaCompleja compleja = new ExcusaCompleja("aliens");
         ExcusaInverosimil inverosimil = new ExcusaInverosimil("increíble");
 
@@ -96,14 +110,40 @@ class MainTest {
         assertTrue(trivial.puedeSerManejadaPor(recepcionista));
         assertFalse(trivial.puedeSerManejadaPor(supervisor));
 
-        assertFalse(moderada.puedeSerManejadaPor(recepcionista));
-        assertTrue(moderada.puedeSerManejadaPor(supervisor));
+        assertFalse(cortoLuz.puedeSerManejadaPor(recepcionista));
+        assertTrue(cortoLuz.puedeSerManejadaPor(supervisor));
+
+        assertFalse(cuidarFamiliar.puedeSerManejadaPor(recepcionista));
+        assertTrue(cuidarFamiliar.puedeSerManejadaPor(supervisor));
 
         assertFalse(compleja.puedeSerManejadaPor(supervisor));
         assertTrue(compleja.puedeSerManejadaPor(gerente));
 
         assertFalse(inverosimil.puedeSerManejadaPor(gerente));
         assertTrue(inverosimil.puedeSerManejadaPor(ceo));
+    }
+
+    @Test
+    void testComportamientoEspecificoSeCortoLuz() {
+        Empleado empleado = new Empleado("Test", "test@test.com", 123);
+        Excusa excusa = new Excusa(empleado, new SeCortoLuz());
+        SupervisorArea supervisor = new SupervisorArea("Supervisor", "super@test.com", 456);
+
+        assertDoesNotThrow(() -> {
+            excusa.serProcesadaPor(supervisor);
+        });
+    }
+
+    @Test
+    void testComportamientoEspecificoTuveCuidarFamiliar() {
+
+        Empleado empleado = new Empleado("Test", "test@test.com", 123);
+        Excusa excusa = new Excusa(empleado, new TuveCuidarFamiliar());
+        SupervisorArea supervisor = new SupervisorArea("Supervisor", "super@test.com", 456);
+
+        assertDoesNotThrow(() -> {
+            excusa.serProcesadaPor(supervisor);
+        });
     }
 
     @Test
@@ -119,7 +159,7 @@ class MainTest {
     }
 
     @Test
-    void testTemplateMethodEnEncargado() {
+    void testTemplateMethodEnEncargadoEmpleado() {
         Recepcionista recepcionista = new Recepcionista("Ana", "ana@test.com", 1001);
         Excusa excusa = empleado.generarExcusa("me quedé dormido");
 
@@ -143,29 +183,39 @@ class MainTest {
 
     @Test
     void testEstrategiaVago() {
+
+        LineaEncargados.resetearInstancia();
+        LineaEncargados linea = LineaEncargados.getInstance();
+        linea.configurarLineaEstandar();
+
         Recepcionista recepcionista = new Recepcionista("Ana", "ana@test.com", 1001);
         SupervisorArea supervisor = new SupervisorArea("Carlos", "carlos@test.com", 1002);
         recepcionista.setSiguiente(supervisor);
-
         recepcionista.setEstrategia(new EstrategiaVago());
+
+        linea.configurar(recepcionista);
 
         Excusa excusa = empleado.generarExcusa("me quedé dormido");
 
         assertDoesNotThrow(() -> {
-            recepcionista.manejarExcusa(excusa);
+            linea.procesarExcusa(excusa);
         });
     }
 
     @Test
     void testEstrategiaProductivo() {
-        Recepcionista recepcionista = new Recepcionista("Ana", "ana@test.com", 1001);
+        LineaEncargados.resetearInstancia();
+        LineaEncargados linea = LineaEncargados.getInstance();
 
+        Recepcionista recepcionista = new Recepcionista("Ana", "ana@test.com", 1001);
         recepcionista.setEstrategia(new EstrategiaProductivo());
+
+        linea.configurar(recepcionista);
 
         Excusa excusa = empleado.generarExcusa("me quedé dormido");
 
         assertDoesNotThrow(() -> {
-            recepcionista.manejarExcusa(excusa);
+            linea.procesarExcusa(excusa);
         });
     }
 
@@ -177,15 +227,16 @@ class MainTest {
     }
 
     @Test
-    void testConfiguracionAutomatica() {
-        LineaEncargados linea = LineaEncargados.getInstance();
+    void testEncargadosTienenEmailSenderPropio() {
+        Recepcionista recep1 = new Recepcionista("Ana", "ana@test.com", 1001);
+        Recepcionista recep2 = new Recepcionista("María", "maria@test.com", 1002);
 
-        assertTrue(linea.estaConfigurada());
+        assertNotSame(recep1.getEmailSender(), recep2.getEmailSender());
     }
 
 
     @Test
-    @DisplayName("Demostración completa del sistema")
+    @DisplayName("Demostración completa del sistema con clases específicas")
     void testDemostracionCompleta() {
         Empleado empleado1 = new Empleado("Juan Pérez", "juan@empresa.com", 2001);
         Empleado empleado2 = new Empleado("María González", "maria@empresa.com", 2002);
@@ -210,6 +261,7 @@ class MainTest {
         LineaEncargados.getInstance().procesarExcusa(excusa5);
 
         System.out.println("\n=== FIN DE LA DEMOSTRACIÓN ===");
+
 
         assertTrue(true);
     }

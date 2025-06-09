@@ -45,7 +45,6 @@ public class Excusa {
         motivo.serProcesadaPor(ceo, this);
     }
 
-
     public Empleado getEmpleado() { return empleado; }
     public MotivoExcusa getMotivo() { return motivo; }
 }

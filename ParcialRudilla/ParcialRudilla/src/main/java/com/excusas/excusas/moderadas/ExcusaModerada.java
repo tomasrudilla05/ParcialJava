@@ -2,10 +2,7 @@ package com.excusas.excusas.moderadas;
 
 import com.excusas.excusas.MotivoExcusa;
 import com.excusas.excusas.Excusa;
-import com.excusas.empleados.encargados.Recepcionista;
-import com.excusas.empleados.encargados.SupervisorArea;
-import com.excusas.empleados.encargados.GerenteRRHH;
-import com.excusas.empleados.encargados.CEO;
+import com.excusas.empleados.encargados.*;
 
 
 public class ExcusaModerada extends MotivoExcusa {
@@ -41,11 +38,17 @@ public class ExcusaModerada extends MotivoExcusa {
 
     @Override
     public void serProcesadaPor(SupervisorArea supervisor, Excusa excusa) {
-
         System.out.println("=== PROCESANDO EXCUSA MODERADA ===");
         System.out.println("Empleado: " + excusa.getEmpleado().getNombre());
         System.out.println("Motivo: " + this.getDescripcion());
         System.out.println("Procesada por: " + supervisor.getNombre());
+
+        supervisor.getEmailSender().enviarEmail(
+                excusa.getEmpleado().getEmail(),
+                supervisor.getEmail(),
+                "Excusa moderada aceptada",
+                "Su excusa ha sido aceptada"
+        );
     }
 
     @Override

@@ -37,6 +37,7 @@ public class ExcusaTrivial extends MotivoExcusa {
         System.out.println("Empleado: " + excusa.getEmpleado().getNombre());
         System.out.println("Motivo: " + this.getDescripcion());
         System.out.println("Procesada por: " + recepcionista.getNombre());
+
         recepcionista.getEmailSender().enviarEmail(
                 excusa.getEmpleado().getEmail(),
                 recepcionista.getEmail(),

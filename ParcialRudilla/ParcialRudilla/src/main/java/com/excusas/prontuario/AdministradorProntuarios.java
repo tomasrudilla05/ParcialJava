@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AdministradorProntuarios extends Observable {
+public class AdministradorProntuarios extends ObservableBase {
     private static AdministradorProntuarios instancia;
     private List<Prontuario> prontuarios;
     private List<String> emailsCEOs;

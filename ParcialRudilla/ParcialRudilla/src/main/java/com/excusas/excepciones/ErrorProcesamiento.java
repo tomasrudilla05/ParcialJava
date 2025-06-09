@@ -1,6 +1,5 @@
 package com.excusas.excepciones;
 
-
 public class ErrorProcesamiento extends ExcusasSAException {
 
     public ErrorProcesamiento(String codigoError, String mensaje) {
@@ -11,7 +10,6 @@ public class ErrorProcesamiento extends ExcusasSAException {
     public String getTipoError() {
         return "Error de Procesamiento";
     }
-
 
     public static ErrorProcesamiento excusaNoManejable(String tipoExcusa) {
         return new ErrorProcesamiento("PROC_001",

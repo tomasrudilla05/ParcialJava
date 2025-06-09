@@ -1,6 +1,5 @@
 package com.excusas.excepciones;
 
-
 public class ExcusasSAError extends RuntimeException {
     private final TipoError tipoError;
     private final String contexto;
@@ -16,7 +15,6 @@ public class ExcusasSAError extends RuntimeException {
 
     public TipoError getTipoError() { return tipoError; }
     public String getContexto() { return contexto; }
-
 
     public static ExcusasSAError lineaNoConfigurada() {
         return new ExcusasSAError(TipoError.CONFIGURACION_LINEA,

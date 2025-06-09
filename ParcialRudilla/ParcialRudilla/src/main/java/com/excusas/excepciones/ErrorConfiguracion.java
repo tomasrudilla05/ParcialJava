@@ -12,7 +12,6 @@ public class ErrorConfiguracion extends ExcusasSAException {
         return "Error de Configuración";
     }
 
-
     public static ErrorConfiguracion lineaNoConfigurada() {
         return new ErrorConfiguracion("La línea de encargados no está configurada");
     }

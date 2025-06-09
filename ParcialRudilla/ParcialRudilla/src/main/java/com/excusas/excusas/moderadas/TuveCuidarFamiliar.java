@@ -14,7 +14,10 @@ public class TuveCuidarFamiliar extends ExcusaModerada {
     public void serProcesadaPor(SupervisorArea supervisor, Excusa excusa) {
         System.out.println("=== PROCESANDO EXCUSA: CUIDADO FAMILIAR ===");
         System.out.println("Empleado: " + excusa.getEmpleado().getNombre());
+        System.out.println("Motivo: " + this.getDescripcion());
+        System.out.println("Procesada por: " + supervisor.getNombre());
         System.out.println("Enviando consulta al empleado...");
+
         supervisor.getEmailSender().enviarEmail(
                 excusa.getEmpleado().getEmail(),
                 supervisor.getEmail(),

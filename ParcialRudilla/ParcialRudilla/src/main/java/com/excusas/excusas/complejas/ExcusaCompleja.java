@@ -2,10 +2,7 @@ package com.excusas.excusas.complejas;
 
 import com.excusas.excusas.MotivoExcusa;
 import com.excusas.excusas.Excusa;
-import com.excusas.empleados.encargados.Recepcionista;
-import com.excusas.empleados.encargados.SupervisorArea;
-import com.excusas.empleados.encargados.GerenteRRHH;
-import com.excusas.empleados.encargados.CEO;
+import com.excusas.empleados.encargados.*;
 
 
 public class ExcusaCompleja extends MotivoExcusa {
@@ -46,11 +43,17 @@ public class ExcusaCompleja extends MotivoExcusa {
 
     @Override
     public void serProcesadaPor(GerenteRRHH gerente, Excusa excusa) {
-
         System.out.println("=== PROCESANDO EXCUSA COMPLEJA ===");
         System.out.println("Empleado: " + excusa.getEmpleado().getNombre());
         System.out.println("Motivo: " + this.getDescripcion());
         System.out.println("Procesada por Gerente RRHH: " + gerente.getNombre());
+
+        gerente.getEmailSender().enviarEmail(
+                excusa.getEmpleado().getEmail(),
+                gerente.getEmail(),
+                "Excusa compleja aceptada",
+                "Su excusa ha sido aceptada después de una evaluación detallada"
+        );
     }
 
     @Override
