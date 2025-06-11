@@ -2,62 +2,36 @@ package com.excusas.excusas.moderadas;
 
 import com.excusas.excusas.MotivoExcusa;
 import com.excusas.excusas.Excusa;
-import com.excusas.empleados.encargados.*;
-
+import com.excusas.empleados.encargados.SupervisorArea;
 
 public class ExcusaModerada extends MotivoExcusa {
 
-    public ExcusaModerada(String descripcion) {
-        super(descripcion);
+    public ExcusaModerada() {
+        super("Excusa moderada");
     }
 
     @Override
-    public boolean puedeSerManejadaPor(Recepcionista recepcionista) {
-        return false;
-    }
-
-    @Override
-    public boolean puedeSerManejadaPor(SupervisorArea supervisor) {
+    public boolean puedeSerManejadoPorModerado() {
         return true;
     }
 
-    @Override
-    public boolean puedeSerManejadaPor(GerenteRRHH gerente) {
-        return false;
+
+    public void procesarCon(SupervisorArea supervisor, Excusa excusa) {
+        this.serProcesadaPor(supervisor, excusa);
     }
 
-    @Override
-    public boolean puedeSerManejadaPor(CEO ceo) {
-        return false;
-    }
 
-    @Override
-    public void serProcesadaPor(Recepcionista recepcionista, Excusa excusa) {
-        throw new UnsupportedOperationException("Excusa moderada no puede ser procesada por recepcionista");
-    }
-
-    @Override
     public void serProcesadaPor(SupervisorArea supervisor, Excusa excusa) {
-        System.out.println("=== PROCESANDO EXCUSA MODERADA ===");
+        System.out.println("=== PROCESANDO EXCUSA MODERADA GENÉRICA ===");
         System.out.println("Empleado: " + excusa.getEmpleado().getNombre());
-        System.out.println("Motivo: " + this.getDescripcion());
+        System.out.println("Motivo: " + excusa.getDescripcion());
         System.out.println("Procesada por: " + supervisor.getNombre());
 
         supervisor.getEmailSender().enviarEmail(
                 excusa.getEmpleado().getEmail(),
                 supervisor.getEmail(),
-                "Excusa moderada aceptada",
+                "Excusa aceptada",
                 "Su excusa ha sido aceptada"
         );
-    }
-
-    @Override
-    public void serProcesadaPor(GerenteRRHH gerente, Excusa excusa) {
-        throw new UnsupportedOperationException("Excusa moderada no puede ser procesada por gerente");
-    }
-
-    @Override
-    public void serProcesadaPor(CEO ceo, Excusa excusa) {
-        throw new UnsupportedOperationException("Excusa moderada no puede ser procesada por CEO");
     }
 }

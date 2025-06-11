@@ -13,6 +13,7 @@ public class EstrategiaProductivo implements EstrategiaManejo {
     public boolean debeEvaluar(Encargado encargado, Excusa excusa) {
         System.out.println("*** ESTRATEGIA PRODUCTIVO ACTIVADA ***");
         System.out.println("Enviando notificación al CTO...");
+
         emailSender.enviarEmail(
                 "cto@excusas-sa.com",
                 encargado.getEmail(),

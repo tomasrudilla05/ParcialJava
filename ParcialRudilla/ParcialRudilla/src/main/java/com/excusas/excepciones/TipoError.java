@@ -1,6 +1,5 @@
 package com.excusas.excepciones;
 
-
 public enum TipoError {
     CONFIGURACION_LINEA("CONFIG_001", "Error en configuración de línea"),
     ENCARGADO_INVALIDO("CONFIG_002", "Encargado inválido"),

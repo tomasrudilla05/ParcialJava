@@ -1,5 +1,6 @@
 package com.excusas.excepciones;
 
+
 public class ErrorProcesamiento extends ExcusasSAException {
 
     public ErrorProcesamiento(String codigoError, String mensaje) {

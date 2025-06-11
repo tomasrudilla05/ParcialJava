@@ -1,10 +1,11 @@
-package com.excusas.interfaces;
+package com.excusas.prontuario;
 
 import com.excusas.empleados.Empleado;
+import com.excusas.excusas.Excusa;
 
 
 public interface IProntuario {
     Empleado getEmpleado();
-    IExcusa getExcusa();
+    Excusa getExcusa();
     int getNumeroLegajo();
 }

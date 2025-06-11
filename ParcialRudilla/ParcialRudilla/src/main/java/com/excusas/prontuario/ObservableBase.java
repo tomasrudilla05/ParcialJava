@@ -15,9 +15,9 @@ public abstract class ObservableBase {
         observers.remove(observer);
     }
 
-    protected void notificarObservers(String evento) {
+    protected void notificarObservers(Prontuario prontuario) {
         for (Observer observer : observers) {
-            observer.actualizar(evento);
+            observer.actualizar(prontuario);
         }
     }
 }

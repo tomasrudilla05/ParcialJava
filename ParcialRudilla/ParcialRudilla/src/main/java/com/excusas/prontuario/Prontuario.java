@@ -2,8 +2,7 @@ package com.excusas.prontuario;
 
 import com.excusas.empleados.Empleado;
 import com.excusas.excusas.Excusa;
-import com.excusas.interfaces.IProntuario;
-import com.excusas.interfaces.IExcusa;
+
 
 public class Prontuario implements IProntuario {
     private Empleado empleado;
@@ -22,7 +21,7 @@ public class Prontuario implements IProntuario {
     }
 
     @Override
-    public IExcusa getExcusa() {
+    public Excusa getExcusa() {
         return excusa;
     }
 

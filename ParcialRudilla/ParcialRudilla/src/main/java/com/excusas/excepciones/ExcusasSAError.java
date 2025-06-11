@@ -1,5 +1,6 @@
 package com.excusas.excepciones;
 
+
 public class ExcusasSAError extends RuntimeException {
     private final TipoError tipoError;
     private final String contexto;
