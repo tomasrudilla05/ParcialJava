@@ -24,3 +24,6 @@ Solo puede haber una única instancia.
 Cuando un CEO registra un nuevo prontuario, el sistema:
 Notifica automáticamente a todos los 👔 CEOs.
 
+Diagrama UML, CASOS DE USO
+https://lucid.app/lucidchart/301087c4-9154-4bfb-ad73-9c8f189b040b/edit?invitationId=inv_42b43c5b-6c1d-45a8-84e1-d35da55916d1&page=pp9nHDg3hOCU#
+
